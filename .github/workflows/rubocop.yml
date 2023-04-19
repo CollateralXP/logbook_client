@@ -1,0 +1,29 @@
+name: Rubocop
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    types: [ synchronize, opened, reopened ]
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+
+    env:
+      RAILS_ENV: test
+      GEMFILE_RUBY_VERSION: 3.1.3
+
+    steps:
+    - uses: actions/checkout@v2.3.4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1.3
+        bundler-cache: true
+
+    - name: Main Linter
+      run: bundle exec rubocop
