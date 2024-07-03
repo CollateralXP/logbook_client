@@ -49,24 +49,25 @@ RSpec.describe LogbookClient::Api do
               method: nil,
               raw_headers: {
                 request_headers: { 'Referrer-Policy': 'strict-origin-when-cross-origin',
-                                  'X-Content-Type-Options': 'nosniff',
-                                  'X-Download-Options': 'noopen',
-                                  'X-Frame-Options': 'SAMEORIGIN',
-                                  'X-Permitted-Cross-Domain-Policies': 'none',
-                                  'X-XSS-Protection': '0' }
+                                   'X-Content-Type-Options': 'nosniff',
+                                   'X-Download-Options': 'noopen',
+                                   'X-Frame-Options': 'SAMEORIGIN',
+                                   'X-Permitted-Cross-Domain-Policies': 'none',
+                                   'X-XSS-Protection': '0' }
               },
               raw_request_payload: nil,
               raw_response_payload: nil,
               reference: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
-                        'log_id:02b31d8d-f674-4965-be2d-e1770f2c5dbd/' \
-                        'log_type:incoming/' \
-                        'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
-                        'external_order_id:0|166924-01',
+                         'log_id:02b31d8d-f674-4965-be2d-e1770f2c5dbd/' \
+                         'log_type:incoming/' \
+                         'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                         'external_order_id:0|166924-01',
               status: '200',
               uri: 'http://localhost:3000/integrations/c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
-                  'webhooks'
+                   'webhooks'
             }],
-            limit_value: 25, offset_value: 0, total_count: 1, total_pages: 0 } }
+            limit_value: 25, offset_value: 0, total_count: 1, total_pages: 0
+          } }
       end
 
       before do
@@ -141,42 +142,42 @@ RSpec.describe LogbookClient::Api do
                  headers: { 'Content-Type': 'application/json; charset=utf-8' })
   end
 
+  # rubocop:disable Metrics/MethodLength
   def stub_get_documents(collection_id, search_term = '', response_status = 200,
                          response_body = nil)
-  endpoint = ['https://logbook.collateralxp.com/api', 'collections', collection_id,
-              'documents'].join('/')
+    endpoint = ['https://logbook.collateralxp.com/api', 'collections', collection_id,
+                'documents'].join('/')
     headers = { 'Accept' => 'application/json', 'X-Api-Token': 'api_token' }
     response_body ||= {
-      :success=>true,
-      :message=>nil,
-      :response=>{
-        :total_count=>1,
-        :total_pages=>0,
-        :current_page=>1,
-        :limit_value=>25,
-        :offset_value=>0,
-        :entries=>
-          [{:id=>"f423f069-fb4e-423e-960f-69dd11037320",
-            :collection_id=>"d2c7daef-1209-4578-aa16-2f7601e82194",
-            :reference=>"integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/" \
-                        "log_id:02b31d8d-f674-4965-be2d-e1770f2c5dbd/log_type:incoming/" \
-                        "integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/" \
-                        "external_order_id:0|166924-01",
-            :created_at=>"2024-07-01T20:17:25Z",
-            :method=>nil,
-            :uri=>"http://localhost:3000/integrations/c59158ed-3b65-4e55-9a15-5251c9dfd408/" \
-                  "webhooks",
-            :raw_headers=>{ :request_headers=> {
-                            :"X-Download-Options"=>"noopen",
-                            :"X-Permitted-Cross-Domain-Policies"=>"none",
-                            :"Referrer-Policy"=>"strict-origin-when-cross-origin",
-                            :"X-XSS-Protection"=>"0",
-                            :"X-Content-Type-Options"=>"nosniff",
-                            :"X-Frame-Options"=>"SAMEORIGIN"}
-            },
-            :raw_request_payload=>nil,
-            :status=>"200",
-            :raw_response_payload=>nil}]
+      success: true,
+      message: nil,
+      response: {
+        total_count: 1,
+        total_pages: 0,
+        current_page: 1,
+        limit_value: 25,
+        offset_value: 0,
+        entries: [{ id: 'f423f069-fb4e-423e-960f-69dd11037320',
+                    collection_id: 'd2c7daef-1209-4578-aa16-2f7601e82194',
+                    reference: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
+                               'log_id:02b31d8d-f674-4965-be2d-e1770f2c5dbd/log_type:incoming/' \
+                               'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                               'external_order_id:0|166924-01',
+                    created_at: '2024-07-01T20:17:25Z',
+                    method: nil,
+                    uri: 'http://localhost:3000/integrations/' \
+                         'c59158ed-3b65-4e55-9a15-5251c9dfd408/webhooks',
+                    raw_headers: { request_headers: {
+                      'X-Download-Options': 'noopen',
+                      'X-Permitted-Cross-Domain-Policies': 'none',
+                      'Referrer-Policy': 'strict-origin-when-cross-origin',
+                      'X-XSS-Protection': '0',
+                      'X-Content-Type-Options': 'nosniff',
+                      'X-Frame-Options': 'SAMEORIGIN'
+                    } },
+                    raw_request_payload: nil,
+                    status: '200',
+                    raw_response_payload: nil }]
       }
     }
 
@@ -186,6 +187,7 @@ RSpec.describe LogbookClient::Api do
                  body: response_body.to_json,
                  headers: { 'Content-Type': 'application/json; charset=utf-8' })
   end
+  # rubocop:enable Metrics/MethodLength
 
   def stub_put_document(collection_id, document_id, status, response_body = { status: 'ok' })
     endpoint = ['https://logbook.collateralxp.com/api',

@@ -23,7 +23,7 @@ module LogbookClient
       end
     end
 
-    INSTRUMENT_NAMESPACE = 'logbook_client'.freeze
+    INSTRUMENT_NAMESPACE = 'logbook_client'
 
     def initialize(configuration)
       @configuration = configuration

@@ -12,7 +12,7 @@ module LogbookClient
 
       def method = :get
       def path = format(PATH, collection_id:)
-      def body = { search: { term:  search_term } }
+      def body = { search: { term: search_term } }
       def options = {}
 
       private
