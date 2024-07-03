@@ -9,6 +9,7 @@ require 'active_model'
 require_relative 'requests/health_request'
 require_relative 'requests/put_document_request'
 require_relative 'requests/get_documents_request'
+require_relative 'requests/get_document_request'
 
 module LogbookClient
   class Api
@@ -38,6 +39,10 @@ module LogbookClient
       raise InvalidSearchTermError, 'Search term must be an string' unless search_term.is_a?(String)
 
       request_with_rescue { Requests::GetDocumentsRequest.new(collection_id, search_term) }
+    end
+
+    def get_document(collection_id, document_id)
+      request_with_rescue { Requests::GetDocumentRequest.new(collection_id, document_id) }
     end
 
     ### PUT requests

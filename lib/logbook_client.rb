@@ -11,7 +11,7 @@ module LogbookClient
   class << self
     extend Forwardable
 
-    def_delegators :api_client, :health, :get_documents, :put_document
+    def_delegators :api_client, :health, :get_documents, :get_document, :put_document
 
     def configure
       yield(configuration)

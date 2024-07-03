@@ -78,6 +78,81 @@ RSpec.describe LogbookClient::Api do
     end
   end
 
+  describe '#get_document' do
+    subject(:get_document) { api.get_document(collection_id, document_id) }
+
+    let(:document_id) { 'test-document' }
+    let(:expected_response) do
+      { message: nil,
+        success: true,
+        response: {
+          collection_id: 'd2c7daef-1209-4578-aa16-2f7601e82194',
+          created_at: '2024-07-02T18:46:02Z',
+          id: '3f3e9467-2cfc-4257-9dae-756549b1237b',
+          raw_headers: {
+            request_headers: { 'x-mock-event-code': '1',
+                              'x-mock-match-request-headers': 'x-mock-event-code' }
+          },
+          raw_request_payload: nil,
+          raw_response_payload: nil,
+          reference: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
+                    'log_id:73a21f45-b840-4aee-837b-908652cc7593/' \
+                    'log_type:outgoing/' \
+                    'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                    'external_order_id:0|166924-01',
+          request_method: nil,
+          resource_file: {
+            collection_id: 'd2c7daef-1209-4578-aa16-2f7601e82194',
+            created_at: '2024-07-02T18:46:02Z',
+            document_id: '3f3e9467-2cfc-4257-9dae-756549b1237b',
+            reference_id: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
+                          'log_id:73a21f45-b840-4aee-837b-908652cc7593/' \
+                          'log_type:outgoing/' \
+                          'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                          'external_order_id:0|166924-01',
+            request: {
+              headers: { request_headers: { 'x-mock-event-code': '1',
+                                            'x-mock-match-request-headers': 'x-mock-event-code' } },
+              payload: '{:userid=>"evaluationzone", ' \
+                      ':password=>"1#lnP7930C", ' \
+                      ':XML_MessageGroup=>"<?xml version=\"1.0\" encoding=\"utf-8\"?> ' \
+                      '<MESSAGE_GROUP xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ' \
+                      'xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" _TRANS=\"0|166924-01\" ' \
+                      '_EventCode=\"1\" _InitiatedBy=\"\" _ActionRequired=\"false\" ' \
+                      '_ClientViewable=\"false\"> <_NoteCategory>Vendor Action</_NoteCategory> ' \
+                      '<NOTE>Hello The report for the property located at 808 LARK ST, Fort ' \
+                      'Walton Beach, FL 32547 was delivered by the appraiser and emailed to ' \
+                      'the processors on file. For questions please call our office at ' \
+                      '773-647-1992. AMC Name : EvaluationZone, Inc</NOTE> </MESSAGE_GROUP>"}',
+              uri: 'https://291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:' \
+                  'vendor_workflow_event'
+            },
+            response: {
+              code: '000',
+              payload: '{"status":{"_condition":"SUCCESS","_code":"000",' \
+                      '"_trans":"5143|109224-05"},"response_date_time":"2023-02-20 20:42:33Z"}'
+            },
+            searchable_terms: ['integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408',
+                              'log_id:73a21f45-b840-4aee-837b-908652cc7593',
+                              'log_type:outgoing',
+                              'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3',
+                              'external_order_id:0|166924-01',
+                              'https:',
+                              '291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:' \
+                              'vendor_workflow_event']
+          },
+          status: '000',
+          uri: 'https://291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:vendor_workflow_event'
+      } }
+    end
+
+    before do
+      stub_get_document(collection_id, document_id, 200)
+    end
+
+    it { expect(get_document).to eq(expected_response) }
+  end
+
   describe '#put_document' do
     subject(:put_document) { api.put_document(collection_id, document) }
 
@@ -183,6 +258,79 @@ RSpec.describe LogbookClient::Api do
 
     stub_request(:get, endpoint)
       .with(headers:, body: { search: { term: search_term } })
+      .to_return(status: response_status,
+                 body: response_body.to_json,
+                 headers: { 'Content-Type': 'application/json; charset=utf-8' })
+  end
+
+  def stub_get_document(collection_id, document_id, response_status = 200, response_body = nil)
+    endpoint = ['https://logbook.collateralxp.com/api',
+                'collections', collection_id, 'documents', document_id].join('/')
+    headers = { 'Accept' => 'application/json', 'X-Api-Token': 'api_token' }
+    response_body ||= { message: nil,
+                        success: true,
+                        response: {
+                          collection_id: 'd2c7daef-1209-4578-aa16-2f7601e82194',
+                          created_at: '2024-07-02T18:46:02Z',
+                          id: '3f3e9467-2cfc-4257-9dae-756549b1237b',
+                          raw_headers: {
+                            request_headers: { 'x-mock-event-code': '1',
+                                              'x-mock-match-request-headers': 'x-mock-event-code' }
+                          },
+                          raw_request_payload: nil,
+                          raw_response_payload: nil,
+                          reference: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
+                                    'log_id:73a21f45-b840-4aee-837b-908652cc7593/' \
+                                    'log_type:outgoing/' \
+                                    'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                                    'external_order_id:0|166924-01',
+                          request_method: nil,
+                          resource_file: {
+                            collection_id: 'd2c7daef-1209-4578-aa16-2f7601e82194',
+                            created_at: '2024-07-02T18:46:02Z',
+                            document_id: '3f3e9467-2cfc-4257-9dae-756549b1237b',
+                            reference_id: 'integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408/' \
+                                          'log_id:73a21f45-b840-4aee-837b-908652cc7593/' \
+                                          'log_type:outgoing/' \
+                                          'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3/' \
+                                          'external_order_id:0|166924-01',
+                            request: {
+                              headers: { request_headers: { 'x-mock-event-code': '1',
+                                                            'x-mock-match-request-headers': 'x-mock-event-code' } },
+                              payload: '{:userid=>"evaluationzone", ' \
+                                      ':password=>"1#lnP7930C", ' \
+                                      ':XML_MessageGroup=>"<?xml version=\"1.0\" encoding=\"utf-8\"?> ' \
+                                      '<MESSAGE_GROUP xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ' \
+                                      'xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" _TRANS=\"0|166924-01\" ' \
+                                      '_EventCode=\"1\" _InitiatedBy=\"\" _ActionRequired=\"false\" ' \
+                                      '_ClientViewable=\"false\"> <_NoteCategory>Vendor Action</_NoteCategory> ' \
+                                      '<NOTE>Hello The report for the property located at 808 LARK ST, Fort ' \
+                                      'Walton Beach, FL 32547 was delivered by the appraiser and emailed to ' \
+                                      'the processors on file. For questions please call our office at ' \
+                                      '773-647-1992. AMC Name : EvaluationZone, Inc</NOTE> </MESSAGE_GROUP>"}',
+                              uri: 'https://291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:' \
+                                  'vendor_workflow_event'
+                            },
+                            response: {
+                              code: '000',
+                              payload: '{"status":{"_condition":"SUCCESS","_code":"000",' \
+                                      '"_trans":"5143|109224-05"},"response_date_time":"2023-02-20 20:42:33Z"}'
+                            },
+                            searchable_terms: ['integration_id:c59158ed-3b65-4e55-9a15-5251c9dfd408',
+                                              'log_id:73a21f45-b840-4aee-837b-908652cc7593',
+                                              'log_type:outgoing',
+                                              'integration_order_id:a0639383-9d91-4fee-89a0-3eef1373b2c3',
+                                              'external_order_id:0|166924-01',
+                                              'https:',
+                                              '291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:' \
+                                              'vendor_workflow_event']
+                          },
+                          status: '000',
+                          uri: 'https://291606e0-1bc1-4586-b686-10a0eeb0f649.mock.pstmn.io:vendor_workflow_event'
+                        } }
+
+    stub_request(:get, endpoint)
+      .with(headers:)
       .to_return(status: response_status,
                  body: response_body.to_json,
                  headers: { 'Content-Type': 'application/json; charset=utf-8' })
