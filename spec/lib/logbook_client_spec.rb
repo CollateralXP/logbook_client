@@ -2,7 +2,7 @@
 
 RSpec.describe LogbookClient do
   describe 'VERSION' do
-    it { expect(LogbookClient::VERSION).to eq('0.3.0') }
+    it { expect(described_class::VERSION).to eq('0.3.0') }
   end
 
   describe '#to_reference_id' do
