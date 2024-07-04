@@ -5,7 +5,6 @@ require_relative 'helpers/document_helper'
 module LogbookClient
   class Document
     include ActiveModel::Model
-
     include Helpers::DocumentHelper
 
     attr_accessor :id, :created_at, :reference_id, :request, :response, :searchable_terms
