@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LogbookClient
   module Helpers
     module DocumentHelper
