@@ -5,11 +5,15 @@ require_relative 'logbook_client/configuration'
 require_relative 'logbook_client/document'
 require_relative 'logbook_client/version'
 
+require_relative 'logbook_client/helpers/document_helper'
+
 module LogbookClient
-  class Error < StandardError; end
+  Error = Class.new(StandardError)
 
   class << self
     extend Forwardable
+
+    include Helpers::DocumentHelper
 
     def_delegators :api_client, :health, :get_documents, :get_document, :put_document
 
