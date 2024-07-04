@@ -8,10 +8,13 @@ require 'active_support/notifications/instrumenter'
 require 'active_model'
 require_relative 'requests/health_request'
 require_relative 'requests/put_document_request'
+require_relative 'requests/get_documents_request'
+require_relative 'requests/get_document_request'
 
 module LogbookClient
   class Api
     InvalidDocumentError = Class.new(StandardError)
+    InvalidSearchTermError = Class.new(StandardError)
     InvalidRequestError = Class.new(StandardError) do
       attr_reader :errors
 
@@ -27,10 +30,22 @@ module LogbookClient
       @configuration = configuration
     end
 
+    ### GET requests
     def health
       request_with_rescue { Requests::HealthRequest.new }
     end
 
+    def get_documents(collection_id, search_term = '')
+      raise InvalidSearchTermError, 'Search term must be an string' unless search_term.is_a?(String)
+
+      request_with_rescue { Requests::GetDocumentsRequest.new(collection_id, search_term) }
+    end
+
+    def get_document(collection_id, document_id)
+      request_with_rescue { Requests::GetDocumentRequest.new(collection_id, document_id) }
+    end
+
+    ### PUT requests
     def put_document(collection_id, document)
       raise InvalidDocumentError, document.errors.full_messages unless document.valid?
 
@@ -63,7 +78,8 @@ module LogbookClient
                                 namespace: INSTRUMENT_NAMESPACE })
         .request(request.method,
                  build_uri(request.path),
-                 default_headers.deep_merge(request.options))
+                 json: (request.respond_to?(:body) && request.body.presence) || {},
+                 **default_headers.deep_merge(request.options))
     end
 
     def raise_error(response)
