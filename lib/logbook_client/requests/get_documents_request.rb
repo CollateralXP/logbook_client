@@ -5,11 +5,11 @@ module LogbookClient
     class GetDocumentsRequest
       PATH = 'collections/%<collection_id>s/documents'
 
-      def initialize(collection_id, search_term, page: nil, per_page: nil)
+      def initialize(collection_id, search_term, **options)
         @collection_id = collection_id
         @search_term = search_term
-        @page = page
-        @per_page = per_page
+        @page = options.delete(:page)
+        @per_page = options.delete(:per_page)
       end
 
       def method = :get
