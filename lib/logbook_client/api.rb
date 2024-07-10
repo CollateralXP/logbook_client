@@ -35,10 +35,12 @@ module LogbookClient
       request_with_rescue { Requests::HealthRequest.new }
     end
 
-    def get_documents(collection_id, search_term = '', page: nil)
+    def get_documents(collection_id, search_term = '', page: nil, per_page: nil)
       raise InvalidSearchTermError, 'Search term must be an string' unless search_term.is_a?(String)
 
-      request_with_rescue { Requests::GetDocumentsRequest.new(collection_id, search_term, page:) }
+      request_with_rescue do
+        Requests::GetDocumentsRequest.new(collection_id, search_term, page:, per_page:)
+      end
     end
 
     def get_document(collection_id, document_id)
