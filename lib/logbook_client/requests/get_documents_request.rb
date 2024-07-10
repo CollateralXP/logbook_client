@@ -5,19 +5,20 @@ module LogbookClient
     class GetDocumentsRequest
       PATH = 'collections/%<collection_id>s/documents'
 
-      def initialize(collection_id, search_term)
+      def initialize(collection_id, search_term, page: nil)
         @collection_id = collection_id
         @search_term = search_term
+        @page = page
       end
 
       def method = :get
       def path = format(PATH, collection_id:)
       def body = { search: { term: search_term } }
-      def options = {}
+      def params = { page: }.compact_blank
 
       private
 
-      attr_reader :collection_id, :search_term
+      attr_reader :collection_id, :search_term, :page
     end
   end
 end

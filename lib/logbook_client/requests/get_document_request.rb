@@ -12,7 +12,6 @@ module LogbookClient
 
       def method = :get
       def path = format(PATH, collection_id:, document_id:)
-      def options = {}
 
       private
 
