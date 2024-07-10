@@ -35,10 +35,12 @@ module LogbookClient
       request_with_rescue { Requests::HealthRequest.new }
     end
 
-    def get_documents(collection_id, search_term = '')
+    def get_documents(collection_id, search_term = '', **options)
       raise InvalidSearchTermError, 'Search term must be an string' unless search_term.is_a?(String)
 
-      request_with_rescue { Requests::GetDocumentsRequest.new(collection_id, search_term) }
+      request_with_rescue do
+        Requests::GetDocumentsRequest.new(collection_id, search_term, **options)
+      end
     end
 
     def get_document(collection_id, document_id)
@@ -73,13 +75,16 @@ module LogbookClient
     end
 
     def build_request(request)
-      HTTP
-        .use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
-                                namespace: INSTRUMENT_NAMESPACE })
-        .request(request.method,
-                 build_uri(request.path),
-                 json: (request.respond_to?(:body) && request.body.presence) || {},
-                 **default_headers.deep_merge(request.options))
+      HTTP.use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
+                                  namespace: INSTRUMENT_NAMESPACE })
+          .request(request.method, build_uri(request.path), **http_request_params(request))
+    end
+
+    def http_request_params(request)
+      { json: (request.respond_to?(:body) && request.body.presence) || {},
+        headers: default_headers.merge(request.respond_to?(:headers) ? request.headers : {}),
+        params: request.respond_to?(:params) ? request.params.presence : {},
+        **(request.respond_to?(:options) ? request.options : {}) }
     end
 
     def raise_error(response)
@@ -93,7 +98,7 @@ module LogbookClient
     end
 
     def default_headers
-      { headers: { 'X-Api-Token' => api_token, accept: 'application/json' } }
+      { 'X-Api-Token' => api_token, accept: 'application/json' }
     end
   end
 end
