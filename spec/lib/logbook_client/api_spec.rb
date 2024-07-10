@@ -28,7 +28,7 @@ RSpec.describe LogbookClient::Api do
       let(:collection_id) { 'abobrinha' }
 
       before do
-        stub_get_documents(collection_id, search_term, 404, { errors: 'Collection not found' })
+        stub_get_documents(collection_id, search_term, 404, '', { errors: 'Collection not found' })
       end
 
       it 'raises InvalidRequestError' do
@@ -72,6 +72,29 @@ RSpec.describe LogbookClient::Api do
 
       before do
         stub_get_documents(collection_id, search_term, 200)
+      end
+
+      it { expect(get_documents).to eq(expected_response) }
+    end
+
+    context 'when success and changing the page' do
+      subject(:get_documents) do
+        api.get_documents(collection_id, search_term, page: 2, per_page: 5)
+      end
+
+      let(:expected_response) do
+        { success: true,
+          message: nil,
+          response: { total_count: 1,
+                      total_pages: 0,
+                      current_page: 2,
+                      limit_value: 5,
+                      offset_value: 0,
+                      entries: [] } }
+      end
+
+      before do
+        stub_get_documents(collection_id, search_term, 200, '?page=2&size=5', expected_response)
       end
 
       it { expect(get_documents).to eq(expected_response) }
@@ -217,11 +240,11 @@ RSpec.describe LogbookClient::Api do
                  headers: { 'Content-Type': 'application/json; charset=utf-8' })
   end
 
-  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/MethodLength,Metrics/ParameterLists
   def stub_get_documents(collection_id, search_term = '', response_status = 200,
-                         response_body = nil)
+                         query_params = '', response_body = nil)
     endpoint = ['https://logbook.collateralxp.com/api', 'collections', collection_id,
-                'documents'].join('/')
+                'documents'].join('/').concat(query_params)
     headers = { 'Accept' => 'application/json', 'X-Api-Token': 'api_token' }
     response_body ||= {
       success: true,
@@ -337,7 +360,7 @@ RSpec.describe LogbookClient::Api do
                  body: response_body.to_json,
                  headers: { 'Content-Type': 'application/json; charset=utf-8' })
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength,Metrics/ParameterLists
 
   def stub_put_document(collection_id, document_id, status, response_body = { status: 'ok' })
     endpoint = ['https://logbook.collateralxp.com/api',
