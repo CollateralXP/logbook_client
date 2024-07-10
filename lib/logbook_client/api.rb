@@ -73,13 +73,12 @@ module LogbookClient
     end
 
     def build_request(request)
-      HTTP
-        .use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
-                                namespace: INSTRUMENT_NAMESPACE })
-        .request(request.method,
-                 build_uri(request.path),
-                 json: (request.respond_to?(:body) && request.body.presence) || {},
-                 **default_headers.deep_merge(request.options))
+      headers = default_headers.merge(request.respond_to?(:headers) ? request.headers : {})
+      json = (request.respond_to?(:body) && request.body.presence) || {}
+
+      HTTP.use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
+                                  namespace: INSTRUMENT_NAMESPACE })
+          .request(request.method, build_uri(request.path), json:, headers:, **request.options)
     end
 
     def raise_error(response)
@@ -93,7 +92,7 @@ module LogbookClient
     end
 
     def default_headers
-      { headers: { 'X-Api-Token' => api_token, accept: 'application/json' } }
+      { 'X-Api-Token' => api_token, accept: 'application/json' }
     end
   end
 end
