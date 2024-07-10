@@ -18,6 +18,17 @@ module LogbookClient
         end.deep_symbolize_keys
       end
 
+      # reference_id_to_hash(string) => hash
+      # example:
+      # reference_id = 'integration_id:009f0ec4-84cd-4fc1-b099-64f76f29b12c--$/#--log_type:incoming'
+      # reference_id_to_hash(reference_id)
+      # => { integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c', log_type: 'incoming' }
+      def reference_id_to_hash(reference_id)
+        to_searchable_terms(reference_id).to_h do |term|
+          term.split(':')
+        end.deep_symbolize_keys
+      end
+
       ## Helpers used on Document class
 
       # to_reference_id(hash) => string
