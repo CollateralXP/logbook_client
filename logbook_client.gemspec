@@ -30,6 +30,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.add_dependency 'activesupport', '~> 7.2'
   spec.add_dependency 'http', '~> 5.2'
 end
