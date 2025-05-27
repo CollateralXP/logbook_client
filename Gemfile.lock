@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logbook_client (0.5.0)
+    logbook_client (0.5.1)
       http (~> 5.2)
 
 GEM
