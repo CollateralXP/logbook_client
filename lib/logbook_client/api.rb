@@ -75,9 +75,14 @@ module LogbookClient
     end
 
     def build_request(request)
-      HTTP.use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
+      HTTP.timeout(http_timeout)
+          .use(instrumentation: { instrumenter: ActiveSupport::Notifications.instrumenter,
                                   namespace: INSTRUMENT_NAMESPACE })
           .request(request.method, build_uri(request.path), **http_request_params(request))
+    end
+
+    def http_timeout
+      (configuration || ::LogbookClient.configuration).http_timeout
     end
 
     def http_request_params(request)
