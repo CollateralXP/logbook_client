@@ -2,7 +2,7 @@
 
 RSpec.describe LogbookClient do
   describe 'VERSION' do
-    it { expect(described_class::VERSION).to eq('0.5.4') }
+    it { expect(described_class::VERSION).to eq('0.5.5') }
   end
 
   describe '#search_term_to_hash' do
