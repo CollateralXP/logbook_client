@@ -71,7 +71,8 @@ module LogbookClient
         response.parse.deep_symbolize_keys
       end
     rescue HTTP::Error => e
-      raise InvalidRequestError, e.message
+      raise InvalidRequestError, "Origin error: #{e.class}, message: #{e.message}, " \
+                                 "backtrace: #{e.backtrace.inspect}"
     end
 
     def build_request(request)
