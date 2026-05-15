@@ -25,7 +25,7 @@ module LogbookClient
       # => { integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c', log_type: 'incoming' }
       def reference_id_to_hash(reference_id)
         to_searchable_terms(reference_id).to_h do |term|
-          term.split(':')
+          term.split(':', 2)
         end.deep_symbolize_keys
       end
 

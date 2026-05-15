@@ -2,7 +2,7 @@
 
 RSpec.describe LogbookClient do
   describe 'VERSION' do
-    it { expect(described_class::VERSION).to eq('0.5.6') }
+    it { expect(described_class::VERSION).to eq('0.6.0') }
   end
 
   describe '#search_term_to_hash' do
@@ -26,6 +26,20 @@ RSpec.describe LogbookClient do
     it do
       expect(reference_id_to_hash).to match(integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c',
                                             log_type: 'incoming')
+    end
+
+    context 'when a value in the reference_id contains ":"' do
+      let(:reference_id) do
+        'integration_id:009f0ec4-84cd-4fc1-b099-64f76f29b12c--$/#--log_type:outgoing' \
+          '--$/#--external_order_id:13520360-4545455000AM:1'
+      end
+
+      it do
+        expect(reference_id_to_hash).to \
+          match(integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c',
+                log_type: 'outgoing',
+                external_order_id: '13520360-4545455000AM:1')
+      end
     end
   end
 
