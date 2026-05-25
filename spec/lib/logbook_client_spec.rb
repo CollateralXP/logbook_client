@@ -14,6 +14,20 @@ RSpec.describe LogbookClient do
       expect(search_term_to_hash).to match(integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c',
                                            log_type: 'incoming')
     end
+
+    context 'when some field contain ":"' do
+      let(:term) do
+        'integration_id:009f0ec4-84cd-4fc1-b099-64f76f29b12c,' \
+          'log_type:incoming,' \
+          'external_order_id:13520355-4545455001AM:1'
+      end
+
+      it do
+        expect(search_term_to_hash).to match(integration_id: '009f0ec4-84cd-4fc1-b099-64f76f29b12c',
+                                             log_type: 'incoming',
+                                             external_order_id: '13520355-4545455001AM:1')
+      end
+    end
   end
 
   describe '#reference_id_to_hash' do
