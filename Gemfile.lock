@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logbook_client (0.6.1)
+    logbook_client (0.6.2)
       http (~> 5.2)
 
 GEM
@@ -103,7 +103,8 @@ GEM
     domain_name (0.6.20240107)
     drb (2.2.3)
     erubi (1.13.1)
-    ffi (1.15.5)
+    ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x86_64-linux-gnu)
     ffi-compiler (1.4.2)
       ffi (>= 1.15.5)
       rake
